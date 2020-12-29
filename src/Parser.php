@@ -59,7 +59,7 @@ class Parser
 
         $this->gitDir = __DIR__;
 
-        $this->branch = 'HEAD';
+        $this->branch = null;
 
         $this->command = ($command) ? $command : $this->buildCommand();
     }
@@ -214,10 +214,12 @@ class Parser
             ->chdir(realpath($this->gitDir))
             ->setCommand('git')
             ->addArgument(new Argument('log'))
-            ->addArgument(new Argument($this->branch))
             ->addArgument(new Argument('--decorate'))
             ->addArgument(new Argument('--pretty=format:', $this->format->getFormatString(), null, true));
 
+        if(null!==$this->branch){
+            $command->addArgument(new Argument($this->branch));
+        }
         if($this->getRevision() !== null){
             $command->addArgument(new Argument($this->getRevision()));
         }
